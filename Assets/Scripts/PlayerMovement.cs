@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     private InputMaster controls;
     private Rigidbody rb;
     public float moveSpeed = 6f;
+    [SerializeField] float walkSpeed = 5f;
 
     [Header("Jumping")]
     public float jumpForce;
@@ -25,9 +26,12 @@ public class PlayerMovement : MonoBehaviour
     bool grounded;
 
     [Header("Sprinting")]
-    [SerializeField] float walkSpeed = 5f;
     [SerializeField] float sprintSpeed = 8f;
     [SerializeField] float acceleration = 10f;
+
+    [Header("Crouching")]
+    public float crouchScale;
+    public float playerScale;
 
     Vector2 input;
 
@@ -66,6 +70,14 @@ public class PlayerMovement : MonoBehaviour
         else
             rb.drag = 0;
 
+        //handle crouch
+        bool isCrouching = controls.PlayerActions.Crouch.ReadValue<float>() > 0.1f;
+
+        if (isCrouching)
+            StartCrouch();
+        if (! isCrouching)
+            StopCrouch();
+
         SpeedControl();
 
         bool isJumping = controls.PlayerActions.Jump.ReadValue<float>() > 0.1f;
@@ -90,6 +102,16 @@ public class PlayerMovement : MonoBehaviour
     void ResetJump()
     {
         readyToJump = true;
+    }
+
+    private void StartCrouch()
+    {
+        transform.localScale = new Vector3(transform.localScale.x, crouchScale, transform.localScale.z);
+    }
+
+    private void StopCrouch()
+    {
+        transform.localScale = new Vector3(transform.localScale.x, playerScale, transform.localScale.z);
     }
 
     void SpeedControl()
