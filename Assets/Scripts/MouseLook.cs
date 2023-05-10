@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 public class MouseLook : MonoBehaviour
 {
     private InputMaster controls;
-    public PlayerMovement playerMovement;
 
     public float mouseSensitivity = 100f;
 
@@ -37,7 +36,7 @@ public class MouseLook : MonoBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -87.5f, 87.5f);
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, playerMovement.tilt);
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
         playerBody.Rotate(Vector3.up * mouseX);
     }
