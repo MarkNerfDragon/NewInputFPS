@@ -32,8 +32,13 @@ public class PlayerMovement : MonoBehaviour
     [Header("Crouching")]
     public float crouchScale;
     public float playerScale;
+    public float crouchSpeed;
 
     Vector2 input;
+
+    bool isJumping;
+    bool isCrouching;
+    bool isSprinting;
 
     void Start()
     {
@@ -49,6 +54,10 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         PlayerMove();
+
+        isJumping = controls.PlayerActions.Jump.ReadValue<float>() > 0.1f;
+        isCrouching = controls.PlayerActions.Crouch.ReadValue<float>() > 0.1f;
+        isSprinting = controls.PlayerActions.Sprinting.ReadValue<float>() > 0.1f;
     }
 
     private void PlayerMove()
@@ -64,6 +73,9 @@ public class PlayerMovement : MonoBehaviour
         else if (!grounded)
             rb.AddForce(movement.normalized * moveSpeed * airMultiplier, ForceMode.Force);
 
+        isJumping = controls.PlayerActions.Jump.ReadValue<float>() > 0.1f;
+        isCrouching = controls.PlayerActions.Crouch.ReadValue<float>() > 0.1f;
+
         //handle drag
         if (grounded)
             rb.drag = groundDrag;
@@ -71,20 +83,16 @@ public class PlayerMovement : MonoBehaviour
             rb.drag = 0;
 
         //handle crouch
-        bool isCrouching = controls.PlayerActions.Crouch.ReadValue<float>() > 0.1f;
-
-        if (isCrouching)
+        if (isCrouching && !isJumping)
             StartCrouch();
-        if (! isCrouching)
+        if (!isCrouching)
             StopCrouch();
 
         SpeedControl();
 
-        bool isJumping = controls.PlayerActions.Jump.ReadValue<float>() > 0.1f;
-
         if (isJumping)
         {
-            if (grounded && readyToJump)
+            if (grounded && readyToJump && !isCrouching)
             {
                 readyToJump = false;
                 Jump();
@@ -124,9 +132,9 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }
 
-        bool isSprinting = controls.PlayerActions.Sprinting.ReadValue<float>() > 0.1f;
+        isSprinting = controls.PlayerActions.Sprinting.ReadValue<float>() > 0.1f;
 
-        if (isSprinting)
+        if (isSprinting && !isCrouching)
         {
             moveSpeed = Mathf.Lerp(moveSpeed, sprintSpeed, acceleration * Time.deltaTime);
         }
