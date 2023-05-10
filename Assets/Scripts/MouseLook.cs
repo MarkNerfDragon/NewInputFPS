@@ -7,7 +7,7 @@ public class MouseLook : MonoBehaviour
 {
     private InputMaster controls;
     
-    [Header("Setting")]
+    [Header("Settings")]
     public float mouseSensitivity = 100f;
 
     float xRotation = 0f;
