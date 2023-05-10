@@ -25,10 +25,6 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask whatIsGround;
     bool grounded;
 
-    [Header("Camera")]
-    public float tilt;
-    public float tiltSpeed;
-
     Vector2 input;
 
     void Start()
