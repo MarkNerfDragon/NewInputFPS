@@ -9,7 +9,6 @@ public class PlayerMovement : MonoBehaviour
     private InputMaster controls;
     private Rigidbody rb;
     public float moveSpeed = 6f;
-    public float standingSpeed = 6f;
 
     [Header("Jumping")]
     public float jumpForce;
@@ -24,6 +23,11 @@ public class PlayerMovement : MonoBehaviour
     public float distanceToGround;
     public LayerMask whatIsGround;
     bool grounded;
+
+    [Header("Sprinting")]
+    [SerializeField] float walkSpeed = 5f;
+    [SerializeField] float sprintSpeed = 8f;
+    [SerializeField] float acceleration = 10f;
 
     Vector2 input;
 
@@ -51,13 +55,13 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 movement = (input.y * transform.forward) + (input.x * transform.right);
 
-        if(grounded)
+        if (grounded)
             rb.AddForce(movement.normalized * moveSpeed, ForceMode.Force);
-        else if(!grounded)
+        else if (!grounded)
             rb.AddForce(movement.normalized * moveSpeed * airMultiplier, ForceMode.Force);
 
         //handle drag
-        if(grounded)
+        if (grounded)
             rb.drag = groundDrag;
         else
             rb.drag = 0;
@@ -66,9 +70,9 @@ public class PlayerMovement : MonoBehaviour
 
         bool isJumping = controls.PlayerActions.Jump.ReadValue<float>() > 0.1f;
 
-        if(isJumping)
+        if (isJumping)
         {
-            if(grounded && readyToJump)
+            if (grounded && readyToJump)
             {
                 readyToJump = false;
                 Jump();
@@ -92,10 +96,21 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-        if(flatVel.magnitude > moveSpeed)
+        if (flatVel.magnitude > moveSpeed)
         {
             Vector3 limitedVel = flatVel.normalized * moveSpeed;
             rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+        }
+
+        bool isSprinting = controls.PlayerActions.Sprinting.ReadValue<float>() > 0.1f;
+
+        if (isSprinting)
+        {
+            moveSpeed = Mathf.Lerp(moveSpeed, sprintSpeed, acceleration * Time.deltaTime);
+        }
+        else
+        {
+            moveSpeed = Mathf.Lerp(moveSpeed, walkSpeed, acceleration * Time.deltaTime);
         }
     }
 
