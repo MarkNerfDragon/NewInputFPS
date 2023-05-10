@@ -55,9 +55,6 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(movement.normalized * moveSpeed, ForceMode.Force);
         else if(!grounded)
             rb.AddForce(movement.normalized * moveSpeed * airMultiplier, ForceMode.Force);
-        
-        //camera tilt
-        tilt = Mathf.Lerp(tilt, -input.x, Time.deltaTime * tiltSpeed);
 
         //handle drag
         if(grounded)
