@@ -33,7 +33,6 @@ public class PlayerMovement : MonoBehaviour
     public float crouchScale;
     public float playerScale;
     public float crouchSpeed;
-    public Transform plrBody;
 
     Vector2 input;
 
