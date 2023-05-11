@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
     public float moveSpeed = 6f;
     [SerializeField] float walkSpeed = 5f;
+    public float wallrunSpeed = 6.5f;
 
     [Header("Jumping")]
     public float jumpForce;
@@ -36,9 +37,10 @@ public class PlayerMovement : MonoBehaviour
 
     Vector2 input;
 
-    bool isJumping;
+    public bool isJumping;
     bool isCrouching;
     bool isSprinting;
+    public bool wallrunning;
 
     void Start()
     {
@@ -83,9 +85,9 @@ public class PlayerMovement : MonoBehaviour
             rb.drag = 0;
 
         //handle crouch
-        if (isCrouching && !isJumping)
+        if (isCrouching && !isJumping || !wallrunning)
             StartCrouch();
-        if (!isCrouching)
+        if (!isCrouching || wallrunning)
             StopCrouch();
 
         SpeedControl();
@@ -150,6 +152,15 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             moveSpeed = Mathf.Lerp(moveSpeed, walkSpeed, acceleration * Time.deltaTime);
+        }
+
+        if(wallrunning)
+        {
+            moveSpeed = Mathf.Lerp(moveSpeed, wallrunSpeed, acceleration * Time.deltaTime);
+        }
+        else
+        {
+
         }
     }
 
