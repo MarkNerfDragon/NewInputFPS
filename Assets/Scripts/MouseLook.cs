@@ -11,13 +11,12 @@ public class MouseLook : MonoBehaviour
     public float mouseSensitivity = 100f;
 
     float xRotation = 0f;
+    float yRotation = 0f;
 
-    private Transform playerBody;
+    [SerializeField] private Transform playerBody;
 
     void Awake()
     {
-        playerBody = transform.parent;
-
         controls = new InputMaster();
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -34,12 +33,14 @@ public class MouseLook : MonoBehaviour
         float mouseX = mouseLook.x * Time.deltaTime * mouseSensitivity;
         float mouseY = mouseLook.y * Time.deltaTime * mouseSensitivity;
 
+        yRotation += mouseX;
+
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -87.5f, 87.5f);
 
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
-        playerBody.Rotate(Vector3.up * mouseX);
+        playerBody.localRotation = Quaternion.Euler(0f, yRotation, 0f);
     }
 
     private void OnEnable()
