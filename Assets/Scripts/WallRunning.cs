@@ -39,6 +39,9 @@ public class WallRunning : MonoBehaviour
     private PlayerMovement pm;
     private Rigidbody rb;
 
+    [Header("Camera")]
+    public MouseLook cam;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -129,6 +132,10 @@ public class WallRunning : MonoBehaviour
         pm.wallrunning = true;
 
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+        //camera effects
+        if(wallLeft) cam.DoTilt(-5f);
+        if(wallRight) cam.DoTilt(5f);
     }
 
     private void WallRunningMovement()
@@ -163,6 +170,8 @@ public class WallRunning : MonoBehaviour
     {
         pm.wallrunning = false;
         rb.useGravity = true;
+
+        cam.DoTilt(0f);
     }
 
     private void wallJump()
