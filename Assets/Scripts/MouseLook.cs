@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 using UnityEngine.InputSystem;
 
 public class MouseLook : MonoBehaviour
 {
-    private InputMaster controls;
+     private InputMaster controls;
     
     [Header("Settings")]
     public float mouseSensitivity = 100f;
@@ -42,6 +43,11 @@ public class MouseLook : MonoBehaviour
         cameraHolder.transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
 
         playerBody.localRotation = Quaternion.Euler(0f, yRotation, 0f);
+    }
+
+    public void DoFov(float endValue)
+    {
+        GetComponent<Camera>().DOFieldOfView(endValue, 0.25f);
     }
 
     public void DoTilt(float zTilt)
