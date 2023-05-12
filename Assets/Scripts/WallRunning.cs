@@ -94,7 +94,7 @@ public class WallRunning : MonoBehaviour
                 StartWallRun();
             }
 
-            if(controls.PlayerActions.WallJump.triggered)
+            if(controls.PlayerActions.Jump.triggered)
             {
                 wallJump();    
             }
