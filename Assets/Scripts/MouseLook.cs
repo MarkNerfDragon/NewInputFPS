@@ -9,6 +9,7 @@ public class MouseLook : MonoBehaviour
     
     [Header("Settings")]
     public float mouseSensitivity = 100f;
+    public Transform cameraHolder;
 
     float xRotation = 0f;
     float yRotation = 0f;
@@ -38,9 +39,14 @@ public class MouseLook : MonoBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -87.5f, 87.5f);
 
-        transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        cameraHolder.transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
 
         playerBody.localRotation = Quaternion.Euler(0f, yRotation, 0f);
+    }
+
+    public void DoTilt(float zTilt)
+    {
+        transform.DOLocalRotate(new Vector3(0, 0, zTilt), 0.25f);
     }
 
     private void OnEnable()
