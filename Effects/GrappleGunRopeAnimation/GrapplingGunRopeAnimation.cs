@@ -11,6 +11,11 @@ public class GrapplingGun : MonoBehaviour {
     private float maxDistance = 500f;
     private SpringJoint joint;
 
+    [Header("Prediction")]
+    public RaycastHit predictionHit;
+    public float predictionSphereCastRadius;
+    public Transform predictionPoint;
+
     void Awake() {
         lr = GetComponent<LineRenderer>();
 
@@ -21,7 +26,45 @@ public class GrapplingGun : MonoBehaviour {
     }
 
     void Update() {
-        //Grapple();
+        CheckForSwingPoints();
+    }
+
+    private void CheckForSwingPoints()
+    {
+        if(joint != null) return;
+
+        RaycastHit sphereCastHit;
+        Physics.SphereCast(camera.position, predictionSphereCastRadius, camera.forward, out sphereCastHit, maxDistance, whatIsGrappleable);
+
+        RaycastHit raycastHit;
+        Physics.Raycast(camera.position, camera.forward, out raycastHit, maxDistance, whatIsGrappleable);
+
+        Vector3 realHitPoint;
+
+        if(raycastHit.point != Vector3.zero)
+        {
+            realHitPoint = raycastHit.point;
+        }
+
+        else if(sphereCastHit.point != Vector3.zero)
+        {
+            realHitPoint = sphereCastHit.point;
+        }
+        
+        else
+            realHitPoint = Vector3.zero;
+
+        if(realHitPoint != Vector3.zero)
+        {
+            predictionPoint.gameObject.SetActive(true);
+            predictionPoint.position = realHitPoint;
+        }
+        else
+        {
+            predictionPoint.gameObject.SetActive(false);
+        }
+
+        predictionHit = raycastHit.point == Vector3.zero ? sphereCastHit : raycastHit;
     }
 
     public void Grapple(InputAction.CallbackContext context)
