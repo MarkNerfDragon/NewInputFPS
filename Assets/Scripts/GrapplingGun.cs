@@ -10,6 +10,11 @@ public class GrapplingGun : MonoBehaviour {
     public Transform gunTip, camera, player;
     private float maxDistance = 500f;
     private SpringJoint joint;
+    
+    [Header("Prediction")]
+    public RaycastHit predictionHit;
+    public float predictionSphereCastRadius;
+    public Transform predictionPoint;
 
     void Awake() {
         lr = GetComponent<LineRenderer>();
